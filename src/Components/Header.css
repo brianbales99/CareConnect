@@ -1,11 +1,13 @@
 .careconnect-header {
-    background: linear-gradient(to right, #2563eb, #1e3a8a);
+    background: linear-gradient( #2563eb, #1e3a8a);
     color: white;
     padding: 1rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    
   }
   
   .header-title {
