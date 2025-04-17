@@ -22,11 +22,7 @@ function LoginPage() {
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
-        const role = userSnap.data().role;
-        if (role === "patient") navigate("/patient");
-        else if (role === "doctor") navigate("/doctor");
-        else if (role === "admin") navigate("/admin");
-        else alert("Unknown role");
+        navigate("/home"); // ⬅️ Redirect all roles to /home
       } else {
         alert("No role found for this user.");
       }

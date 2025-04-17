@@ -16,9 +16,10 @@ function App() {
     <Router>
       <div className="app-wrapper">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<LoginPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/doctor" element={<DoctorDashboard />} />
           <Route path="/patient" element={<PatientDashboard />} />
         </Routes>
