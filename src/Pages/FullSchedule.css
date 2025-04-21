@@ -1,0 +1,18 @@
+.rbc-toolbar {
+    justify-content: space-between;
+    padding: 1rem;
+  }
+  
+  .rbc-btn-group button {
+    background-color: #4b5563;
+    color: white;
+    border-radius: 4px;
+    margin: 0 0.25rem;
+    padding: 6px 12px;
+    border: none;
+  }
+  
+  .rbc-btn-group button:hover {
+    background-color: #374151;
+  }
+  

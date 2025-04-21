@@ -1,16 +1,17 @@
 // src/Pages/SignUp.js
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebaseConfig";
 import "./SignUp.css";
-import { Header } from '../Components/Header';
-import { Footer } from '../Components/Footer';
 
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("patient");
+
+  const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -32,8 +33,9 @@ function SignUp() {
 
   return (
     <>
-      <Header />
       <div className="signup-container">
+      <div className="auth-logo">CareConnect</div>
+
         <h2>Create Your Account</h2>
         <p>Join CareConnect to manage your appointments.</p>
         <form className="signup-form" onSubmit={handleSignup}>
@@ -53,18 +55,26 @@ function SignUp() {
             required
           />
 
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
+          {/* <select value={role} onChange={(e) => setRole(e.target.value)}>
             <option value="patient">Patient</option>
             <option value="doctor">Doctor</option>
             <option value="administrator">Administrator</option>
-          </select>
+          </select> */}
 
           <button type="submit" className="signup-button">
             Sign Up
           </button>
+
+          {/* ✅ New Login button */}
+          <button
+            type="button"
+            className="login-link-button"
+            onClick={() => navigate("/login")}
+          >
+            Already have an account? Log In
+          </button>
         </form>
       </div>
-      <Footer />
     </>
   );
 }

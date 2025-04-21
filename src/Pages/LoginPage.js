@@ -4,8 +4,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebaseConfig";
 import { useNavigate, Link } from "react-router-dom";
-import { Header } from "../Components/Header";
-import { Footer } from "../Components/Footer";
 import "./Login.css";
 
 function LoginPage() {
@@ -34,8 +32,8 @@ function LoginPage() {
 
   return (
     <>
-      <Header />
       <div className="login-container">
+      <div className="auth-logo">CareConnect</div>
         <h2>Welcome Back</h2>
         <p>Log in to manage your appointments.</p>
         <form onSubmit={handleLogin}>
@@ -62,7 +60,6 @@ function LoginPage() {
           </Link>
         </p>
       </div>
-      <Footer />
     </>
   );
 }

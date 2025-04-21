@@ -61,3 +61,24 @@
     text-align: left;
   }
   
+  .home-schedule-wrapper {
+    text-align: center;
+    margin: 2rem 0;
+  }
+  
+  .home-button-full-schedule {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #4b5563;
+    color: white;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+  
+  .home-button-full-schedule:hover {
+    background-color: #374151;
+  }
+  
+  

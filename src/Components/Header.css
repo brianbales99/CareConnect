@@ -46,4 +46,12 @@
   .logout-btn:hover {
     background-color: #dc2626;
   }
+  .home-btn {
+    background-color: #10b981; /* teal */
+    color: white;
+  }
+  
+  .home-btn:hover {
+    background-color: #059669;
+  }
   

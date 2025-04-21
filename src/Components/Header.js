@@ -6,7 +6,6 @@ export function Header() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // TODO: Replace with real logout logic
     alert("Logged out");
     navigate("/login");
   };
@@ -15,10 +14,17 @@ export function Header() {
     navigate("/profile");
   };
 
+  const goHome = () => {
+    navigate("/");
+  };
+
   return (
     <header className="careconnect-header">
       <h1 className="header-title">CareConnect</h1>
       <div className="header-buttons">
+        <button onClick={goHome} className="header-btn home-btn">
+          Home
+        </button>
         <button onClick={goToProfile} className="header-btn profile-btn">
           Profile
         </button>
