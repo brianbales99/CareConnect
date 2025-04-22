@@ -20,7 +20,7 @@ function LoginPage() {
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
-        navigate("/home"); // ⬅️ Redirect all roles to /home
+        navigate("/");
       } else {
         alert("No role found for this user.");
       }
@@ -33,7 +33,7 @@ function LoginPage() {
   return (
     <>
       <div className="login-container">
-      <div className="auth-logo">CareConnect</div>
+        <div className="auth-logo">CareConnect</div>
         <h2>Welcome Back</h2>
         <p>Log in to manage your appointments.</p>
         <form onSubmit={handleLogin}>
@@ -51,8 +51,15 @@ function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+
+          {/* Forgot Password Link */}
+          <p className="forgot-link" style={{ textAlign: "right", margin: "0 0 10px 0" }}>
+            <Link to="/forgot-password">Forgot Password?</Link>
+          </p>
+
           <button type="submit">Login</button>
         </form>
+
         <p className="signup-redirect">
           Don’t have an account?{" "}
           <Link to="/signup" className="signup-link">

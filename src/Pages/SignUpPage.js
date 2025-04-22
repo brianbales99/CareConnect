@@ -7,6 +7,8 @@ import { auth, db } from "../firebaseConfig";
 import "./SignUp.css";
 
 function SignUp() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("patient");
@@ -20,11 +22,14 @@ function SignUp() {
       const user = userCredential.user;
 
       await setDoc(doc(db, "users", user.uid), {
+        firstName,
+        lastName,
         email,
         role,
       });
 
       alert("Signup successful!");
+      navigate("/login");
     } catch (error) {
       console.error("Signup error:", error.message);
       alert("Signup failed. Please try again.");
@@ -34,11 +39,26 @@ function SignUp() {
   return (
     <>
       <div className="signup-container">
-      <div className="auth-logo">CareConnect</div>
+        <div className="auth-logo">CareConnect</div>
 
         <h2>Create Your Account</h2>
         <p>Join CareConnect to manage your appointments.</p>
+
         <form className="signup-form" onSubmit={handleSignup}>
+          <input
+            type="text"
+            placeholder="First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            required
+          />
           <input
             type="email"
             placeholder="Email"
@@ -46,7 +66,6 @@ function SignUp() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-
           <input
             type="password"
             placeholder="Password"
@@ -55,17 +74,10 @@ function SignUp() {
             required
           />
 
-          {/* <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="patient">Patient</option>
-            <option value="doctor">Doctor</option>
-            <option value="administrator">Administrator</option>
-          </select> */}
-
           <button type="submit" className="signup-button">
             Sign Up
           </button>
 
-          {/* ✅ New Login button */}
           <button
             type="button"
             className="login-link-button"
