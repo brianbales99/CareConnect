@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebaseConfig";
+import ForgotPasswordPage from "./Pages/ForgotPasswordPage"; 
 
 // Pages
 import Home from "./Pages/Home";
@@ -75,6 +76,7 @@ function App() {
           {/* Other dashboards (optional: protect later) */}
           <Route path="/doctor" element={<DoctorDashboard />} />
           <Route path="/patient" element={<PatientDashboard />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         </Routes>
       </div>
     </Router>
