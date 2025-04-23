@@ -1,24 +1,23 @@
 // src/ProfilePage.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const ProfilePage = () => {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
     const [weight, setWeight] = useState('');
     const [bloodGroup, setBloodGroup] = useState('');
     const [recentMedicalIssue, setRecentMedicalIssue] = useState('');
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log({ firstName, lastName, email, weight, bloodGroup, recentMedicalIssue });
+        // Handle form submission logic here
+        console.log({ weight, bloodGroup, recentMedicalIssue });
     };
 
     const handleCancel = () => {
-        navigate('/');
-    };
+        console.log("Cancel button clicked"); // Debugging log
+        navigate('/'); // Navigate to the desired route
+     };
 
     return (
         <div className="profile-page">
@@ -28,8 +27,7 @@ const ProfilePage = () => {
                     <label>First Name:</label>
                     <input
                         type="text"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
+                        placeholder="Enter your first name"
                         required
                     />
                 </div>
@@ -37,8 +35,7 @@ const ProfilePage = () => {
                     <label>Last Name:</label>
                     <input
                         type="text"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
+                        placeholder="Enter your last name"
                         required
                     />
                 </div>
@@ -46,8 +43,7 @@ const ProfilePage = () => {
                     <label>Email:</label>
                     <input
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter your email"
                         required
                     />
                 </div>
@@ -83,7 +79,7 @@ const ProfilePage = () => {
                     />
                 </div>
                 <button type="submit">Save Profile</button>
-                <button type="button" onClick={handleCancel} className="cancel-btn">Cancel</button>
+                <button type="button" onClick={handleCancel} className="cancel-btn">Cancel</button> {/* Cancel button */}
             </form>
         </div>
     );
