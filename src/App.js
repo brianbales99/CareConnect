@@ -10,7 +10,7 @@ import PatientDashboard from "./Pages/PatientDashboard";
 import LoginPage from "./Pages/LoginPage";
 import SignUpPage from "./Pages/SignUpPage";
 import FullSchedule from "./Pages/FullSchedule";
-
+import ProfilePage from "./Pages/ProfilePage"; // Import ProfilePage
 
 // Layout
 import MainLayout from "./layouts/MainLayout";
@@ -55,18 +55,18 @@ function App() {
               )
             }
           />
-          {/* <Route
+          <Route
             path="/profile"
             element={
               user ? (
                 <MainLayout>
-                  <Profile />
+                  <ProfilePage />
                 </MainLayout>
               ) : (
                 <LoginPage />
               )
             }
-          /> */}
+          />
 
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />
@@ -81,4 +81,6 @@ function App() {
   );
 }
 
+
 export default App;
+
