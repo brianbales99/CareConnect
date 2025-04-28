@@ -1,95 +1,108 @@
-/* src/ProfilePage.css */
-.profile-page {
-    max-width: 400px;
-    margin: auto;
-    padding: 30px; /* Increased padding for a more spacious layout */
-    border: 1px solid #e0e0e0; /* Lighter border color */
-    border-radius: 12px; /* Slightly larger border radius */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Deeper shadow for a more elevated look */
-    background-color: #f9f9f9; /* Light background color for contrast */
-    font-family: Arial, sans-serif; /* Set a base font family */
-}
-
-.profile-page h2 {
+/* Wrapper to center the form on the screen */
+.profile-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px); /* Adjust if header/footer changes */
+    background-color: #f3f4f6; /* Soft gray background */
+    padding: 20px;
+  }
+  
+  /* Form container */
+  .profile-page {
+    width: 100%;
+    max-width: 500px;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  /* Heading */
+  .profile-page h2 {
     text-align: center;
-    font-size: 28px; /* Increased heading size */
-    color: #333; /* Darker text color for better readability */
-    margin-bottom: 20px; /* Space below the heading */
-}
-
-.profile-page div {
-    margin-bottom: 20px; /* Increased margin for better spacing */
-}
-
-.profile-page label {
+    font-size: 28px;
+    color: #1e293b;
+    margin-bottom: 30px;
+  }
+  
+  /* Form group */
+  .profile-page div {
+    margin-bottom: 20px;
+  }
+  
+  /* Labels */
+  .profile-page label {
     display: block;
-    margin-bottom: 8px; /* Increased space below labels */
-    font-weight: bold; /* Make labels bold for better visibility */
-    color: #555; /* Slightly darker color for labels */
-}
-
-.profile-page input,
-.profile-page select,
-.profile-page textarea { /* Include textarea for styling */
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #374151;
+  }
+  
+  /* Inputs, Select, Textarea */
+  .profile-page input,
+  .profile-page select,
+  .profile-page textarea {
     width: 100%;
-    padding: 12px; /* Increased padding for comfort */
-    border: 1px solid #ccc;
-    border-radius: 6px; /* Slightly larger border radius */
-    font-size: 16px; /* Set a base font size for inputs */
-    transition: border-color 0.3s; /* Smooth transition for border color */
-}
-
-.profile-page input:focus,
-.profile-page select:focus,
-.profile-page textarea:focus {
-    border-color: #007bff; /* Change border color on focus */
-    outline: none; /* Remove default outline */
-}
-
-.profile-page textarea {
-    resize: vertical; /* Allow vertical resizing of textarea */
-    min-height: 120px; /* Set a minimum height for the textarea */
-}
-
-.profile-page button {
+    padding: 12px;
+    font-size: 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    transition: border-color 0.3s;
+  }
+  
+  .profile-page input:focus,
+  .profile-page select:focus,
+  .profile-page textarea:focus {
+    border-color: #3b82f6;
+    outline: none;
+  }
+  
+  /* Textarea specific */
+  .profile-page textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  /* Buttons */
+  .profile-page button {
     width: 100%;
-    padding: 12px; /* Increased padding for buttons */
-    background-color: #007bff; /* Primary button color */
-    color: white; /* White text color for contrast */
+    padding: 12px;
+    font-size: 16px;
     border: none;
-    border-radius: 6px; /* Slightly larger border radius */
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 16px; /* Set a base font size for the button */
-    transition: background-color 0.3s; /* Smooth transition for background color */
-}
-
-.profile-page button:hover {
-    background-color: #0056b3; /* Darker shade on hover */
-}
-
-.profile-page .cancel-btn {
-    background-color: #f44336; /* Red color for cancel button */
-    margin-top: 10px; /* Space above the cancel button */
-}
-
-.profile-page .cancel-btn:hover {
-    background-color: #c62828; /* Darker shade on hover for cancel button */
-}
-
-/* Optional: Error message styling */
-.error-message {
-    color: red; /* Red color for error messages */
-    font-size: 14px; /* Font size for error messages */
-    margin-top: 5px; /* Space above error messages */
-}
-
-/* Optional: Responsive Design */
-@media (max-width: 480px) {
+    transition: background-color 0.3s;
+  }
+  
+  .profile-page button[type="submit"] {
+    background-color: #3b82f6;
+    color: white;
+    margin-bottom: 10px;
+  }
+  
+  .profile-page button[type="submit"]:hover {
+    background-color: #2563eb;
+  }
+  
+  .profile-page .cancel-btn {
+    background-color: #ef4444;
+    color: white;
+  }
+  
+  .profile-page .cancel-btn:hover {
+    background-color: #dc2626;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 480px) {
     .profile-page {
-        padding: 20px; /* Adjust padding for smaller screens */
+      padding: 25px;
     }
-
+  
     .profile-page h2 {
-        font-size: 24px; /* Adjust heading size for smaller screens */
+      font-size: 22px;
     }
-}
+  }
+  
