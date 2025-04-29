@@ -15,3 +15,15 @@ body,
 main {
   flex: 1;
 }
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding-bottom: 2rem; /* Optional: add breathing room above footer */
+}
+
