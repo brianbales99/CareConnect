@@ -32,26 +32,38 @@ const appointments = [
   },
 ];
 
+// 🛠️ Custom toolbar: show only Month + Year
+function CustomToolbar({ label }) {
+  return (
+    <div style={{ textAlign: "center", fontSize: "1.5rem", margin: "1rem 0", fontWeight: "bold" }}>
+      {label}
+    </div>
+  );
+}
+
 export default function FullSchedule() {
   return (
     <>
+
+
       <div className="p-8">
         <h2 className="text-2xl font-bold text-center mb-6">Full Appointment Schedule</h2>
         <div style={{ height: "600px" }}>
-        <Calendar
-  localizer={localizer}
-  events={appointments}
-  startAccessor="start"
-  endAccessor="end"
-  views={['month', 'week', 'day', 'agenda']}
-  defaultView="month"
-  toolbar={true}
-  popup={true}
-  style={{ height: "100%" }}
-/>
-
+          <Calendar
+            localizer={localizer}
+            events={appointments}
+            startAccessor="start"
+            endAccessor="end"
+            views={['month']}
+            defaultView="month"
+            components={{
+              toolbar: CustomToolbar, // 🛠 use your custom toolbar
+            }}
+            style={{ height: "100%" }}
+          />
         </div>
       </div>
+
     </>
   );
 }

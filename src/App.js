@@ -11,7 +11,7 @@ import PatientDashboard from "./Pages/PatientDashboard";
 import LoginPage from "./Pages/LoginPage";
 import SignUpPage from "./Pages/SignUpPage";
 import FullSchedule from "./Pages/FullSchedule";
-import ProfilePage from "./Pages/ProfilePage"; // Import ProfilePage
+import ProfilePage from "./Pages/ProfilePage"; 
 
 // Layout
 import MainLayout from "./layouts/MainLayout";
