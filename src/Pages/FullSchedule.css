@@ -1,18 +1,59 @@
-.rbc-toolbar {
-    justify-content: space-between;
-    padding: 1rem;
+.schedule-page {
+    padding: 2rem;
   }
   
-  .rbc-btn-group button {
+  .page-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #2563eb;
+  }
+  
+  .calendar-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .fc .fc-toolbar-title {
+    font-size: 2rem;
+    color: #374151;
+  }
+  
+  .fc-button {
+    background-color: #2563eb;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .fc-button:hover {
+    background-color: #1d4ed8;
+  }
+  
+  .fc-button-primary:not(:disabled).fc-button-active,
+  .fc-button-primary:not(:disabled):active {
+    background-color: #1d4ed8;
+  }
+  
+  .fc-daygrid-event {
     background-color: #4b5563;
     color: white;
-    border-radius: 4px;
-    margin: 0 0.25rem;
-    padding: 6px 12px;
     border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
   }
   
-  .rbc-btn-group button:hover {
+  .fc-daygrid-event:hover {
     background-color: #374151;
   }
   
