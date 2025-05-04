@@ -2,36 +2,42 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebaseConfig";
-import ForgotPasswordPage from "./Pages/ForgotPasswordPage"; 
+import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
 
 // Pages
 import Home from "./Pages/Home";
-import DoctorDashboard from "./Pages/DoctorDashboard";
-import PatientDashboard from "./Pages/PatientDashboard";
 import LoginPage from "./Pages/LoginPage";
 import SignUpPage from "./Pages/SignUpPage";
 import FullSchedule from "./Pages/FullSchedule";
-import ProfilePage from "./Pages/ProfilePage"; 
+import ProfilePage from "./Pages/ProfilePage";
 
 // Layout
 import MainLayout from "./layouts/MainLayout";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // loading state
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      setLoading(false); 
     });
     return () => unsub();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="loading-screen">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <Router>
       <div className="app-wrapper">
         <Routes>
-
-          {/* Pages with Header/Footer shown if user is logged in */}
           <Route
             path="/"
             element={
@@ -72,10 +78,6 @@ function App() {
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-
-          {/* Other dashboards (optional: protect later) */}
-          <Route path="/doctor" element={<DoctorDashboard />} />
-          <Route path="/patient" element={<PatientDashboard />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         </Routes>
       </div>
@@ -83,6 +85,4 @@ function App() {
   );
 }
 
-
 export default App;
-

@@ -27,3 +27,28 @@ main {
   padding-bottom: 2rem; /* Optional: add breathing room above footer */
 }
 
+.loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f9fafb;
+}
+
+.spinner {
+  border: 8px solid #e0e0e0; /* Light gray */
+  border-top: 8px solid #2563eb; /* CareConnect primary blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,28 +1,61 @@
-// src/ProfilePage.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { auth, db } from '../firebaseConfig';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import './ProfilePage.css';
 
 const ProfilePage = () => {
+  const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
   const [weight, setWeight] = useState('');
   const [bloodGroup, setBloodGroup] = useState('');
   const [recentMedicalIssue, setRecentMedicalIssue] = useState('');
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  // Fetch user profile on load
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        setEmail(userData.email || '');
+        setFirstName(userData.firstName || '');
+        setLastName(userData.lastName || '');
+        setWeight(userData.weight || '');
+        setBloodGroup(userData.bloodGroup || '');
+        setRecentMedicalIssue(userData.recentMedicalIssue || '');
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({
-      firstName,
-      lastName,
-      email,
-      weight,
-      bloodGroup,
-      recentMedicalIssue,
-    });
+
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        weight,
+        bloodGroup,
+        recentMedicalIssue
+      });
+
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile.");
+    }
   };
 
   const handleCancel = () => {
@@ -34,37 +67,20 @@ const ProfilePage = () => {
       <div className="profile-page">
         <h2>User Profile</h2>
         <form onSubmit={handleSubmit}>
+
           <div>
             <label>First Name:</label>
-            <input
-              type="text"
-              placeholder="Enter your first name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              required
-            />
+            <input type="text" value={firstName} disabled />
           </div>
 
           <div>
             <label>Last Name:</label>
-            <input
-              type="text"
-              placeholder="Enter your last name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              required
-            />
+            <input type="text" value={lastName} disabled />
           </div>
 
           <div>
             <label>Email:</label>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <input type="email" value={email} disabled />
           </div>
 
           <div>

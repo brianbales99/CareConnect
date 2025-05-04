@@ -1,7 +1,16 @@
 // src/pages/Home.js
-import React, { useState } from "react";
-import { Header } from "../Components/Header.js";
-import { Footer } from "../Components/Footer.js";
+import React, { useState, useEffect } from "react";
+import { db, auth } from "../firebaseConfig";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
 import PopupModal from "../Components/PopupModal";
 import "./Home.css";
 
@@ -9,18 +18,11 @@ export default function Home() {
   const [showBookModal, setShowBookModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showModifyModal, setShowModifyModal] = useState(false);
-
-  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
-  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
-  const [appointmentToCancel, setAppointmentToCancel] = useState(null);
-
+  const [appointments, setAppointments] = useState([]);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
-
-  const upcomingAppointments = [
-    { id: 1, date: "2025-04-18", time: "10:00 AM", doctor: "Dr. Smith" },
-    { id: 2, date: "2025-04-20", time: "2:00 PM", doctor: "Dr. Lee" },
-  ];
+  const [appointmentToCancel, setAppointmentToCancel] = useState(null);
 
   const doctors = ["Dr. Smith", "Dr. Lee", "Dr. Johnson", "Dr. Kim"];
   const timeslots = [
@@ -28,224 +30,152 @@ export default function Home() {
     "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"
   ];
 
-  const handleCancelClick = (appt) => {
-    setAppointmentToCancel(appt);
-    setShowCancelConfirm(true);
+  // Fetch Appointments
+  const fetchAppointments = async () => {
+    const q = query(
+      collection(db, "appointments"),
+      where("userId", "==", auth.currentUser.uid),
+      where("status", "!=", "canceled"),
+      orderBy("date")
+    );
+    const querySnapshot = await getDocs(q);
+    const fetched = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    setAppointments(fetched);
   };
 
-  const confirmCancel = () => {
-    alert(`Appointment with ${appointmentToCancel.doctor} on ${appointmentToCancel.date} canceled!`);
-    setShowCancelConfirm(false);
-    setAppointmentToCancel(null);
+  useEffect(() => {
+    if (auth.currentUser) {
+      fetchAppointments();
+    }
+  }, []);
+
+  // Book Appointment
+  const handleBook = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const doctor = form.doctor.value;
+    const time = form.time.value;
+    const date = form.date.value;
+
+    await addDoc(collection(db, "appointments"), {
+      userId: auth.currentUser.uid,
+      doctor,
+      date,
+      time,
+      status: "approved",
+    });
+
+    setShowBookModal(false);
+    fetchAppointments();
   };
+
+  // Cancel Appointment
+  const handleCancel = async (appt) => {
+    await updateDoc(doc(db, "appointments", appt.id), {
+      status: "canceled",
+    });
+    setAppointmentToCancel(null);
+    setShowCancelModal(false);
+    fetchAppointments();
+  };
+
+  // Modify Appointment
+  const handleModify = async (e) => {
+    e.preventDefault();
+    await updateDoc(doc(db, "appointments", selectedAppointment.id), {
+      date: newDate,
+      time: newTime,
+    });
+    setSelectedAppointment(null);
+    setShowModifyModal(false);
+    fetchAppointments();
+  };
+
+  // Get next 3 appointments
+  const upcomingAppointments = appointments.slice(0, 3);
 
   return (
-    <>
+    <div className="home-container">
+      <h1 className="home-heading">Welcome to CareConnect</h1>
+      <p className="home-subheading">Your trusted healthcare appointment scheduling system.</p>
 
-      <div className="home-container">
-        <h1 className="home-heading">Welcome to CareConnect</h1>
-        <p className="home-subheading">
-          Your trusted healthcare appointment scheduling system.
-        </p>
-
-        {/* Appointment Action Buttons */}
-        <div className="home-button-group mb-8">
-          <button onClick={() => setShowBookModal(true)} className="home-button-book">
-            Book Appointment
-          </button>
-          <button onClick={() => setShowCancelModal(true)} className="home-button-cancel">
-            Cancel Appointment
-          </button>
-          <button onClick={() => setShowModifyModal(true)} className="home-button-modify">
-            Modify Appointment
-          </button>
-        </div>
-
-        {/* Upcoming Appointments */}
-        <div className="upcoming-appointments">
-          <h2 className="text-xl font-semibold mb-4">Upcoming Appointments</h2>
-          {upcomingAppointments.length === 0 ? (
-            <p>No upcoming appointments.</p>
-          ) : (
-            <ul className="space-y-2">
-              {upcomingAppointments.map((appt) => (
-                <li key={appt.id}>
-                  <strong>{appt.date}</strong> at {appt.time} with {appt.doctor}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {/* Full Schedule Button */}
-        <div className="home-schedule-wrapper">
-          <a href="/appointments/schedule" className="home-button-full-schedule">
-            View Full Schedule
-          </a>
-        </div>
+      <div className="home-button-group mb-8">
+        <button onClick={() => setShowBookModal(true)} className="home-button-book">Book Appointment</button>
+        <button onClick={() => setShowCancelModal(true)} className="home-button-cancel">Cancel Appointment</button>
+        <button onClick={() => setShowModifyModal(true)} className="home-button-modify">Modify Appointment</button>
       </div>
 
-      {/* Popup Modals */}
+      <div className="upcoming-appointments">
+        <h2 className="text-xl font-semibold mb-4">Upcoming Appointments</h2>
+        {upcomingAppointments.length === 0 ? (
+          <p>No upcoming appointments.</p>
+        ) : (
+          <ul className="space-y-2">
+            {upcomingAppointments.map((appt) => (
+              <li key={appt.id}><strong>{appt.date}</strong> at {appt.time} with {appt.doctor}</li>
+            ))}
+          </ul>
+        )}
+      </div>
 
-      {/* Book Appointment */}
-      <PopupModal
-        isOpen={showBookModal}
-        title="Book Appointment"
-        onClose={() => setShowBookModal(false)}
-      >
-        <form>
-          <div>
-            <label>Select Doctor:</label><br />
-            <select>
-              {doctors.map((doctor, idx) => (
-                <option key={idx} value={doctor}>{doctor}</option>
-              ))}
-            </select>
-          </div>
-          <br />
-          <div>
-            <label>Select Time:</label><br />
-            <select>
-              {timeslots.map((time, idx) => (
-                <option key={idx} value={time}>{time}</option>
-              ))}
-            </select>
-          </div>
-          <br />
-          <input type="date" /><br /><br />
+      <div className="home-schedule-wrapper">
+        <a href="/appointments/schedule" className="home-button-full-schedule">View Full Schedule</a>
+      </div>
+
+      {/* Book Appointment Modal */}
+      <PopupModal isOpen={showBookModal} title="Book Appointment" onClose={() => setShowBookModal(false)}>
+        <form onSubmit={handleBook}>
+          <label>Select Doctor:</label><br />
+          <select name="doctor" required>{doctors.map(d => <option key={d}>{d}</option>)}</select><br /><br />
+
+          <label>Select Time:</label><br />
+          <select name="time" required>{timeslots.map(t => <option key={t}>{t}</option>)}</select><br /><br />
+
+          <input type="date" name="date" required /><br /><br />
           <button type="submit">Confirm Booking</button>
         </form>
       </PopupModal>
 
-      {/* Cancel Appointment */}
-      <PopupModal
-        isOpen={showCancelModal}
-        title="Cancel Appointment"
-        onClose={() => {
-          setShowCancelModal(false);
-          setShowCancelConfirm(false);
-          setAppointmentToCancel(null);
-        }}
-      >
-        {!showCancelConfirm ? (
-          <>
-            <p>Click an appointment to cancel it:</p>
-            <ul className="space-y-2">
-              {upcomingAppointments.map((appt) => (
-                <li key={appt.id}>
-                  <button
-                    style={{
-                      backgroundColor: "#dc2626",
-                      color: "white",
-                      border: "none",
-                      padding: "10px 15px",
-                      borderRadius: "5px",
-                      marginTop: "10px",
-                      cursor: "pointer",
-                      width: "100%"
-                    }}
-                    onClick={() => handleCancelClick(appt)}
-                  >
-                    {appt.date} at {appt.time} with {appt.doctor}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </>
-        ) : (
-          <>
-            <p>Are you sure you want to cancel this appointment?</p>
-            <strong>{appointmentToCancel?.date} at {appointmentToCancel?.time} with {appointmentToCancel?.doctor}</strong>
-            <br /><br />
-            <button
-              onClick={confirmCancel}
-              style={{
-                backgroundColor: "#ef4444",
-                color: "white",
-                padding: "10px 20px",
-                border: "none",
-                borderRadius: "5px",
-                marginRight: "10px",
-                cursor: "pointer"
-              }}
-            >
-              Yes, Cancel
-            </button>
-            <button
-              onClick={() => setShowCancelConfirm(false)}
-              style={{
-                backgroundColor: "#6b7280",
-                color: "white",
-                padding: "10px 20px",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer"
-              }}
-            >
-              No, Go Back
-            </button>
-          </>
-        )}
+      {/* Cancel Appointment Modal */}
+      <PopupModal isOpen={showCancelModal} title="Cancel Appointment" onClose={() => setShowCancelModal(false)}>
+        <p>Click an appointment to cancel:</p>
+        <ul>
+          {appointments.map(appt => (
+            <li key={appt.id}>
+              <button onClick={() => handleCancel(appt)}>{appt.date} at {appt.time} with {appt.doctor}</button>
+            </li>
+          ))}
+        </ul>
       </PopupModal>
 
-      {/* Modify Appointment */}
-      <PopupModal
-        isOpen={showModifyModal}
-        title="Modify Appointment"
-        onClose={() => {
-          setShowModifyModal(false);
-          setSelectedAppointmentId(null);
-          setNewDate("");
-          setNewTime("");
-        }}
-      >
-        {!selectedAppointmentId ? (
+      {/* Modify Appointment Modal */}
+      <PopupModal isOpen={showModifyModal} title="Modify Appointment" onClose={() => setShowModifyModal(false)}>
+        {!selectedAppointment ? (
           <>
-            <p>Select an appointment to modify:</p>
-            <ul className="space-y-2">
-              {upcomingAppointments.map((appt) => (
+            <p>Select appointment to modify:</p>
+            <ul>
+              {appointments.map(appt => (
                 <li key={appt.id}>
-                  <button
-                    style={{
-                      backgroundColor: "#facc15",
-                      color: "black",
-                      border: "none",
-                      padding: "10px 15px",
-                      borderRadius: "5px",
-                      marginTop: "10px",
-                      cursor: "pointer",
-                      width: "100%"
-                    }}
-                    onClick={() => setSelectedAppointmentId(appt.id)}
-                  >
-                    {appt.date} at {appt.time} with {appt.doctor}
-                  </button>
+                  <button onClick={() => setSelectedAppointment(appt)}>{appt.date} at {appt.time} with {appt.doctor}</button>
                 </li>
               ))}
             </ul>
           </>
         ) : (
-          <form style={{ marginTop: "20px" }}>
+          <form onSubmit={handleModify}>
             <label>New Date:</label><br />
-            <input
-              type="date"
-              value={newDate}
-              onChange={(e) => setNewDate(e.target.value)}
-            /><br /><br />
+            <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)} required /><br /><br />
 
             <label>New Time:</label><br />
-            <select value={newTime} onChange={(e) => setNewTime(e.target.value)}>
+            <select value={newTime} onChange={(e) => setNewTime(e.target.value)} required>
               <option value="">Select Time</option>
-              {timeslots.map((time, idx) => (
-                <option key={idx} value={time}>{time}</option>
-              ))}
+              {timeslots.map(t => <option key={t} value={t}>{t}</option>)}
             </select><br /><br />
 
             <button type="submit">Confirm Modification</button>
           </form>
         )}
       </PopupModal>
-
-    </>
+    </div>
   );
 }

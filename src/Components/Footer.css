@@ -1,13 +1,21 @@
-/* src/components/Footer.css */
-
 .footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     background-color: #f3f4f6;
     color: #374151;
     text-align: center;
     padding: 0.75rem;
     font-size: 0.9rem;
     border-top: 1px solid #e5e7eb;
-    width: 100%;
+    z-index: 50;
   }
   
+  /* Emergency message styling */
+  .footer-emergency {
+    font-weight: bold;
+    color: #dc2626; /* red */
+    margin-bottom: 0.5rem;
+  }
   
