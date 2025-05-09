@@ -1,4 +1,3 @@
-// src/Pages/LoginPage.js
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
@@ -14,19 +13,25 @@ function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+   
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
-        navigate("/");
+        const { role } = userSnap.data();
+        if (role === "doctor") {
+          navigate("/doctor-profile");
+        } else {
+          navigate("/profile");
+        }
       } else {
-        alert("No role found for this user.");
+        alert("No user record found for this account.");
       }
     } catch (err) {
-      console.error(err);
-      alert("Login failed. Check your credentials.");
+      console.error("Login failed:", err.message);
+      alert("Login failed. Check your credentials and try again.");
     }
   };
 
@@ -61,7 +66,7 @@ function LoginPage() {
         </form>
 
         <p className="signup-redirect">
-          Don’t have an account?{" "}
+          Don’t have an account?{' '}
           <Link to="/signup" className="signup-link">
             Sign up
           </Link>
