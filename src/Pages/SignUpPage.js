@@ -11,7 +11,8 @@ function SignUp() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("patient");
+  // Initialize role as empty so placeholder shows first
+  const [role, setRole] = useState("");
 
   const navigate = useNavigate();
 
@@ -37,57 +38,68 @@ function SignUp() {
   };
 
   return (
-    <>
-      <div className="signup-container">
-        <div className="auth-logo">CareConnect</div>
+    <div className="signup-container">
+      <div className="auth-logo">CareConnect</div>
+      <h2>Create Your Account</h2>
+      <p>Join CareConnect to manage your appointments.</p>
 
-        <h2>Create Your Account</h2>
-        <p>Join CareConnect to manage your appointments.</p>
+      <form className="signup-form" onSubmit={handleSignup}>
+        <input
+          type="text"
+          placeholder="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          required
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
-        <form className="signup-form" onSubmit={handleSignup}>
-          <input
-            type="text"
-            placeholder="First Name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        {/* Role selector with placeholder */}
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          required
+          className="signup-role"
+        >
+          <option value="" disabled hidden>
+            Select your role
+          </option>
+          <option value="patient">Patient</option>
+          <option value="doctor">Doctor</option>
+        </select>
 
-          <button type="submit" className="signup-button">
-            Sign Up
-          </button>
+        <button type="submit" className="signup-button">
+          Sign Up
+        </button>
 
-          <button
-            type="button"
-            className="login-link-button"
-            onClick={() => navigate("/login")}
-          >
-            Already have an account? Log In
-          </button>
-        </form>
-      </div>
-    </>
+        <button
+          type="button"
+          className="login-link-button"
+          onClick={() => navigate("/login")}
+        >
+          Already have an account? Log In
+        </button>
+      </form>
+    </div>
   );
 }
 
