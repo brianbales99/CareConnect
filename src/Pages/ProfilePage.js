@@ -65,7 +65,7 @@ const ProfilePage = () => {
   return (
     <div className="profile-wrapper">
       <div className="profile-page">
-        <h2>User Profile</h2>
+        <h2>Patient Profile</h2>
         <form onSubmit={handleSubmit}>
 
           <div>

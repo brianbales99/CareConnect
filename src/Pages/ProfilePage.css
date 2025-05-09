@@ -1,14 +1,12 @@
-/* Wrapper to center the form on the screen */
 .profile-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 80px); /* Adjust if header/footer changes */
-    background-color: #f3f4f6; /* Soft gray background */
+    min-height: calc(100vh - 80px); 
+    background-color: #f3f4f6; 
     padding: 20px;
   }
-  
-  /* Form container */
+
   .profile-page {
     width: 100%;
     max-width: 500px;
@@ -19,7 +17,6 @@
     font-family: "Segoe UI", sans-serif;
   }
   
-  /* Heading */
   .profile-page h2 {
     text-align: center;
     font-size: 28px;
@@ -27,20 +24,17 @@
     margin-bottom: 30px;
   }
   
-  /* Form group */
   .profile-page div {
     margin-bottom: 20px;
   }
   
-  /* Labels */
   .profile-page label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
     color: #374151;
   }
-  
-  /* Inputs, Select, Textarea */
+
   .profile-page input,
   .profile-page select,
   .profile-page textarea {
@@ -59,13 +53,11 @@
     outline: none;
   }
   
-  /* Textarea specific */
   .profile-page textarea {
     min-height: 100px;
     resize: vertical;
   }
   
-  /* Buttons */
   .profile-page button {
     width: 100%;
     padding: 12px;
@@ -95,7 +87,6 @@
     background-color: #dc2626;
   }
   
-  /* Mobile responsiveness */
   @media (max-width: 480px) {
     .profile-page {
       padding: 25px;
@@ -105,4 +96,14 @@
       font-size: 22px;
     }
   }
+  .profile-wrapper {
+    display: flex;
+    justify-content: center;  
+    margin-top: 40px;          
+  }
   
+  .profile-page {
+    width: 100%;
+    max-width: 600px;       
+    padding: 0 20px;        
+  }
