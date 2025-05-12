@@ -1,9 +1,9 @@
-// src/Pages/SignUp.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebaseConfig";
+import PopupModal from "../Components/PopupModal";
 import "./SignUp.css";
 
 function SignUp() {
@@ -11,30 +11,53 @@ function SignUp() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // Initialize role as empty so placeholder shows first
   const [role, setRole] = useState("");
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [doctorPassword, setDoctorPassword] = useState("");
 
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    if (role === "doctor") {
+      setShowVerificationModal(true);
+    } else {
+      await createAccount();
+    }
+  };
+
+  const createAccount = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
       await setDoc(doc(db, "users", user.uid), {
         firstName,
         lastName,
         email,
         role,
       });
-
       alert("Signup successful!");
       navigate("/login");
     } catch (error) {
       console.error("Signup error:", error.message);
       alert("Signup failed. Please try again.");
     }
+  };
+
+  const handleVerifyDoctor = async () => {
+    const correctPassword = "Doctor123";
+    if (doctorPassword === correctPassword) {
+      setShowVerificationModal(false);
+      await createAccount();
+    } else {
+      alert("Incorrect doctor password. Please try again.");
+    }
+  };
+
+  const cancelDoctorRole = () => {
+    setShowVerificationModal(false);
+    setRole(""); // reset selection
+    setDoctorPassword("");
   };
 
   return (
@@ -73,7 +96,6 @@ function SignUp() {
           required
         />
 
-        {/* Role selector with placeholder */}
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
@@ -99,6 +121,48 @@ function SignUp() {
           Already have an account? Log In
         </button>
       </form>
+
+      <PopupModal
+        isOpen={showVerificationModal}
+        title="Doctor Verification"
+        onClose={cancelDoctorRole}
+      >
+        <p>This role requires verification. Enter the doctor password:</p>
+        <input
+          type="password"
+          value={doctorPassword}
+          onChange={(e) => setDoctorPassword(e.target.value)}
+          placeholder="Enter doctor password"
+        />
+        <br /><br />
+        <button
+          onClick={handleVerifyDoctor}
+          style={{
+            backgroundColor: "#2563eb",
+            color: "white",
+            padding: "8px 16px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            marginRight: "10px",
+          }}
+        >
+          Confirm
+        </button>
+        <button
+          onClick={cancelDoctorRole}
+          style={{
+            backgroundColor: "#6b7280",
+            color: "white",
+            padding: "8px 16px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          Cancel
+        </button>
+      </PopupModal>
     </div>
   );
 }

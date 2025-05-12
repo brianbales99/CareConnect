@@ -1,15 +1,19 @@
+// src/App.js
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "./firebaseConfig";
+
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
 import Home from "./Pages/Home";
 import LoginPage from "./Pages/LoginPage";
 import SignUpPage from "./Pages/SignUpPage";
 import FullSchedule from "./Pages/FullSchedule";
 import ProfilePage from "./Pages/ProfilePage";
+import DoctorDashboard from "./Pages/DoctorDashboard";
 import DoctorProfilePage from "./Pages/DoctorProfilePage";
+import AllDoctors from "./Pages/AllDoctors";
 import MainLayout from "./layouts/MainLayout";
 
 function App() {
@@ -51,73 +55,78 @@ function App() {
     <Router>
       <div className="app-wrapper">
         <Routes>
-          {/* Home */}
+          {/* Doctor-only routes */}
           <Route
-            path="/"
+            path="/doctordashboard"
             element={
-              user ? (
+              user && role === "doctor" ? <DoctorDashboard /> : <Navigate to="/login" replace />
+            }
+          />
+          <Route
+            path="/doctor-profile"
+            element={
+              user && role === "doctor" ? <DoctorProfilePage /> : <Navigate to="/login" replace />
+            }
+          />
+
+          {/* Patient-only routes */}
+          <Route
+            path="/home"
+            element={
+              user && role === "patient" ? (
                 <MainLayout>
                   <Home />
                 </MainLayout>
               ) : (
-                <LoginPage />
+                <Navigate to="/login" replace />
               )
             }
           />
 
-          {/* Full Schedule */}
           <Route
             path="/appointments/schedule"
             element={
-              user ? (
+              user && role === "patient" ? (
                 <MainLayout>
                   <FullSchedule />
                 </MainLayout>
               ) : (
-                <LoginPage />
+                <Navigate to="/login" replace />
               )
             }
           />
 
-          {/* Doctor‑only profile page */}
-          <Route
-            path="/doctor-profile"
-            element={
-              user ? (
-                <MainLayout>
-                  <DoctorProfilePage />
-                </MainLayout>
-              ) : (
-                <LoginPage />
-              )
-            }
-          />
-
-          {/* Shared /profile: shows doctor or patient view */}
           <Route
             path="/profile"
             element={
-              user ? (
+              user && role === "patient" ? (
                 <MainLayout>
-                  {role === "doctor" ? (
-                    <DoctorProfilePage />
-                  ) : (
-                    <ProfilePage />
-                  )}
+                  <ProfilePage />
                 </MainLayout>
               ) : (
-                <LoginPage />
+                <Navigate to="/login" replace />
               )
             }
           />
 
-          {/* Public routes */}
+          <Route
+            path="/doctors"
+            element={
+              user && role === "patient" ? (
+                <MainLayout>
+                  <AllDoctors />
+                </MainLayout>
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+
+          {/* Public */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route
-            path="/forgot-password"
-            element={<ForgotPasswordPage />}
-          />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         </Routes>
       </div>
     </Router>

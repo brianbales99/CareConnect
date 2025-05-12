@@ -1,29 +1,31 @@
+// src/components/DoctorHeader.js
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Header.css";
 
-export function Header() {
+export function DoctorHeader() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    alert("Logged out");
+    localStorage.clear(); // Optional: clear any extra state
     navigate("/login");
   };
 
-  const goToProfile = () => {
-    navigate("/profile");
+  const goToDashboard = () => {
+    navigate("/doctordashboard");
   };
 
-  const goHome = () => {
-    navigate("/home");
+  const goToProfile = () => {
+    navigate("/doctor-profile");
+
   };
 
   return (
     <header className="careconnect-header">
-      <h1 className="header-title">CareConnect</h1>
+      <h1 className="header-title">CareConnect Doctor</h1>
       <div className="header-buttons">
-        <button onClick={goHome} className="header-btn home-btn">
-          Home
+        <button onClick={goToDashboard} className="header-btn profile-btn">
+          Dashboard
         </button>
         <button onClick={goToProfile} className="header-btn profile-btn">
           Profile
@@ -35,3 +37,5 @@ export function Header() {
     </header>
   );
 }
+
+export default DoctorHeader;

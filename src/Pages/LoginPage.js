@@ -1,7 +1,8 @@
 // src/Pages/LoginPage.js
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../firebaseConfig";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
 
@@ -10,18 +11,30 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      // Authenticate user
-      await signInWithEmailAndPassword(auth, email, password);
-      // Always redirect to Home page
-      navigate("/");
-    } catch (err) {
-      console.error("Login failed:", err.message);
-      alert("Login failed. Check your credentials and try again.");
+const handleLogin = async (e) => {
+  e.preventDefault();
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      const { role } = userSnap.data();
+      if (role === "doctor") {
+        navigate("/doctordashboard");
+      } else {
+        navigate("/home");
+      }
+    } else {
+      alert("No user role found.");
     }
-  };
+  } catch (err) {
+    console.error("Login failed:", err.message);
+    alert("Login failed. Check your credentials and try again.");
+  }
+};
 
   return (
     <div className="login-container">
@@ -58,7 +71,7 @@ function LoginPage() {
       </form>
 
       <p className="signup-redirect">
-        Don’t have an account?{' '}
+        Don’t have an account?{" "}
         <Link to="/signup" className="signup-link">
           Sign up
         </Link>
