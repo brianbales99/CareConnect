@@ -59,7 +59,7 @@ const ProfilePage = () => {
   };
 
   const handleCancel = () => {
-    navigate('/');
+    navigate('/home');
   };
 
   return (

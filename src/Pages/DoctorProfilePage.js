@@ -1,93 +1,107 @@
-import React, { useState } from 'react';
+// src/Pages/DoctorProfilePage.js
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { auth, db } from '../firebaseConfig';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import './ProfilePage.css';
+import { DoctorHeader } from '../Components/DoctorHeader';
 
 const DoctorProfilePage = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [specialty, setSpecialty] = useState('');
-  const [licenseNumber, setLicenseNumber] = useState('');
-  const [bio, setBio] = useState('');
+  const [doctorData, setDoctorData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    specialty: '',
+    bio: ''
+  });
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log({ firstName, lastName, email, specialty, licenseNumber, bio });
-    // TODO: save to Firestore or API
-  };
+  useEffect(() => {
+    const fetchDoctorData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const docRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(docRef);
 
-  const handleCancel = () => {
-    navigate('/');
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setDoctorData(prev => ({
+            ...prev,
+            firstName: data.firstName || '',
+            lastName: data.lastName || '',
+            email: data.email || '',
+            specialty: data.specialty || '',
+            bio: data.bio || ''
+          }));
+        }
+      }
+    };
+
+    fetchDoctorData();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const user = auth.currentUser;
+    if (user) {
+      const docRef = doc(db, 'users', user.uid);
+      await setDoc(docRef, {
+        ...doctorData,
+        role: 'doctor',
+      }, { merge: true });
+      alert('Profile updated!');
+    }
   };
 
   return (
-    <div className="profile-wrapper">
-      <div className="profile-page">
-        <h2>Doctor Profile</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>First Name:</label>
-            <input
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Last Name:</label>
-            <input
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Specialty:</label>
-            <input
-              type="text"
-              value={specialty}
-              onChange={(e) => setSpecialty(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>License Number:</label>
-            <input
-              type="text"
-              value={licenseNumber}
-              onChange={(e) => setLicenseNumber(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Short Bio:</label>
-            <textarea
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              placeholder="Write a brief description..."
-              required
-            />
-          </div>
-          <button type="submit">Save Profile</button>
-          <button type="button" className="cancel-btn" onClick={handleCancel}>
-            Cancel
-          </button>
-        </form>
+    <>
+      <DoctorHeader />
+      <div className="profile-wrapper">
+        <div className="profile-page">
+          <h2>Doctor Profile</h2>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label>First Name:</label>
+              <input type="text" value={doctorData.firstName} disabled />
+            </div>
+
+            <div>
+              <label>Last Name:</label>
+              <input type="text" value={doctorData.lastName} disabled />
+            </div>
+
+            <div>
+              <label>Email:</label>
+              <input type="email" value={doctorData.email} disabled />
+            </div>
+
+            <div>
+              <label>Specialty:</label>
+              <input
+                type="text"
+                value={doctorData.specialty}
+                onChange={(e) => setDoctorData({ ...doctorData, specialty: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <label>Bio:</label>
+              <textarea
+                value={doctorData.bio}
+                onChange={(e) => setDoctorData({ ...doctorData, bio: e.target.value })}
+                rows={4}
+              />
+            </div>
+
+            <button type="submit">Save Profile</button>
+            <button type="button" onClick={() => navigate('/doctordashboard')} className="cancel-btn">
+              Cancel
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
