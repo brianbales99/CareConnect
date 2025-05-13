@@ -56,7 +56,7 @@ function SignUp() {
 
   const cancelDoctorRole = () => {
     setShowVerificationModal(false);
-    setRole(""); // reset selection
+    setRole(""); 
     setDoctorPassword("");
   };
 

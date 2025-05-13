@@ -79,15 +79,15 @@
     box-sizing: border-box;
   }
   
-  /* make the select full‑width and same spacing as inputs */
+
   .signup-form select.signup-role {
     width: 100%;
     padding: 12px 14px;
-    margin-bottom: 16px;        /* same as your inputs’ bottom margin */
+    margin-bottom: 16px;        
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
-    appearance: none;           /* remove native arrow styling if you want custom */
+    appearance: none;
     background-position: right 12px center;
     background-repeat: no-repeat;
   }
