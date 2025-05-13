@@ -23,9 +23,9 @@ export default function FullSchedule() {
         const status = data.status;
         let backgroundColor = "#999";
 
-        if (status === "pending") backgroundColor = "#f97316"; // orange
-        else if (status === "approved") backgroundColor = "#22c55e"; // green
-        else if (status === "declined" || status === "canceled") backgroundColor = "#ef4444"; // red
+        if (status === "pending") backgroundColor = "#f97316"; 
+        else if (status === "approved") backgroundColor = "#22c55e"; 
+        else if (status === "declined" || status === "canceled") backgroundColor = "#ef4444"; 
 
         return {
           id: doc.id,

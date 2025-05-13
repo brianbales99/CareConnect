@@ -24,7 +24,7 @@ main {
 
 .main-content {
   flex: 1;
-  padding-bottom: 2rem; /* Optional: add breathing room above footer */
+  padding-bottom: 2rem; 
 }
 
 .loading-screen {
@@ -36,8 +36,8 @@ main {
 }
 
 .spinner {
-  border: 8px solid #e0e0e0; /* Light gray */
-  border-top: 8px solid #2563eb; /* CareConnect primary blue */
+  border: 8px solid #e0e0e0; 
+  border-top: 8px solid #2563eb; 
   border-radius: 50%;
   width: 60px;
   height: 60px;

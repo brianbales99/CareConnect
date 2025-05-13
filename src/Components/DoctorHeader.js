@@ -7,7 +7,7 @@ export function DoctorHeader() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.clear(); // Optional: clear any extra state
+    localStorage.clear(); 
     navigate("/login");
   };
 
